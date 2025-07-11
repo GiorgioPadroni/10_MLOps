@@ -1,3 +1,5 @@
+import time
+
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 from datasets import load_dataset
 import torch
@@ -25,7 +27,7 @@ if __name__ == "__main__":
         save_steps=500,
         save_total_limit=2,
         push_to_hub=True,
-        hub_model_id="tuo-username/nome-modello-sentiment"
+        hub_model_id=f"PonzioPilates97/sentiment_{time.time()}"
     )
 
     trainer = Trainer(
