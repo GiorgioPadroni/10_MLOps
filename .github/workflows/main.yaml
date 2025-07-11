@@ -3,10 +3,31 @@ name: 10_MLOps
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
 
 jobs:
+  train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Train and push model
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          huggingface-cli login --token $HF_TOKEN
+          python -m CI_CD.train
   test:
     runs-on: ubuntu-latest
 
@@ -26,4 +47,4 @@ jobs:
 
     - name: Run tests
       run: |
-        python -m unittest discover tests
+        python -m unittest discover CI_CD/tests

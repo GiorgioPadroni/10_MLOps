@@ -1,3 +1,4 @@
+accelerate==1.8.1
 aiohappyeyeballs==2.6.1
 aiohttp==3.12.14
 aiosignal==1.4.0
@@ -38,6 +39,7 @@ packaging==25.0
 pandas==2.3.1
 pluggy==1.6.0
 propcache==0.3.2
+psutil==7.0.0
 pyarrow==20.0.0
 Pygments==2.19.2
 pytest==8.4.1
