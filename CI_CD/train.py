@@ -33,8 +33,8 @@ if __name__ == "__main__":
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=dataset["train[:10]"],  # No significato da un punto di vista statistico ma train veloce
-        eval_dataset=dataset["test:10"],  # No significato da un punto di vista statistico ma train veloce
+        train_dataset=dataset["train"][10:],  # No significato da un punto di vista statistico ma train veloce
+        eval_dataset=dataset["test"][10:],  # No significato da un punto di vista statistico ma train veloce
         tokenizer=tokenizer
     )
 
