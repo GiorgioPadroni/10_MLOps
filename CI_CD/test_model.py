@@ -4,6 +4,7 @@ import os
 
 # third party libraries
 from datasets import Dataset
+import mlflow
 import pandas as pd
 from sklearn.metrics import classification_report
 from transformers import pipeline, AutoTokenizer
@@ -32,19 +33,31 @@ if __name__ == "__main__":
     df = pd.concat(dfs, ignore_index=True)
 
     preds = pipe(df["text"].tolist(), truncation=True)
-
-    # Extract predicted labels
     predicted_labels = [p["label"].lower() for p in preds]
 
-    # Convert to numerical format if needed
     label_map = {"negative": 0, "neutral": 1, "positive": 2}
     y_true = df["sentiment"].map(label_map)
     y_pred = pd.Series(predicted_labels).map(label_map)
 
-    # Compute classification report
     report = classification_report(y_true, y_pred, output_dict=True)
-
-    # Flatten to CSV
     metrics_df = pd.DataFrame(report).transpose()
+
     os.makedirs("CI_CD/results", exist_ok=True)
-    metrics_df.to_csv("CI_CD/results/metrics.csv")
+    metrics_path = "CI_CD/results/metrics.csv"
+    metrics_df.to_csv(metrics_path)
+
+    mlflow.set_tracking_uri("http://localhost:5000")  # oppure Docker se lo usi così
+    mlflow.set_experiment("Model Evaluation")
+
+    with mlflow.start_run():
+        # Parametri
+        mlflow.log_param("model_id", latest_model_id)
+        mlflow.log_param("num_test_samples", len(df))
+
+        # Logga alcune metriche globali
+        mlflow.log_metric("accuracy", report["accuracy"])
+        mlflow.log_metric("macro_f1", report["macro avg"]["f1-score"])
+        mlflow.log_metric("weighted_f1", report["weighted avg"]["f1-score"])
+
+        # Artefatto CSV
+        mlflow.log_artifact(metrics_path)
