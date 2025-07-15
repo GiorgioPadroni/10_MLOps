@@ -2,7 +2,8 @@ name: 10_MLOps
 
 on:
   push:
-    branches: [ main ]
+    paths:
+      - 'data/**'         # trigger solo su cambiamenti in data/
 
 
 jobs:

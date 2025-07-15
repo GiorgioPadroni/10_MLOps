@@ -1,25 +1,40 @@
+# std libraries
+import glob
 import time
 
+# third party libraries
+from datasets import Dataset
+import pandas as pd
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
-from datasets import load_dataset
 import torch
 
-# Caricamento modello e tokenizer
-model_name = "cardiffnlp/twitter-roberta-base-sentiment-latest"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
 
 def tokenize(batch):
     return tokenizer(batch["text"], padding=True, truncation=True)
 
 if __name__ == "__main__":
-    # Caricamento dataset
-    ds = load_dataset("cardiffnlp/tweet_eval", "sentiment")
+    # Caricamento modello e tokenizer
+    model_name = "cardiffnlp/twitter-roberta-base-sentiment-latest"
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    
+    # Cerca tutti i CSV nella cartella data
+    csv_files = glob.glob("data/*.csv")
+
+    if not csv_files:
+        raise ValueError("No CSV files found in /data")
+    
+    # Carica e concatena tutti i CSV
+    dfs = [pd.read_csv(f) for f in csv_files]
+    df = pd.concat(dfs, ignore_index=True)
+
+    ds = Dataset.from_pandas(df)
+    
     dataset = ds.map(tokenize, batched=True)
 
-    # Subset piccolo e casuale per velocità
-    train_dataset = dataset["train"].shuffle(seed=42).select(range(500))
-    test_dataset = dataset["test"].shuffle(seed=42).select(range(100))
+    label_map = {"negative": 0, "neutral": 1, "positive": 2}
+    ds = ds.map(lambda row: {"label": label_map[row["sentiment"]]})
 
     # Setup Trainer
     training_args = TrainingArguments(
@@ -37,8 +52,8 @@ if __name__ == "__main__":
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=test_dataset,
+        train_dataset=ds,
+        # eval_dataset=test_dataset,
         tokenizer=tokenizer
     )
 

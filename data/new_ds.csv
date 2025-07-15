@@ -1,0 +1,21 @@
+text,sentiment
+"I absolutely loved the new product!",positive
+"Great service and super friendly staff.",positive
+"This is exactly what I needed — perfect!",positive
+"Highly recommend it to anyone looking for quality.",positive
+"The update improved everything, well done!",positive
+"I’m very satisfied with my experience.",positive
+"The app is fast, intuitive, and beautiful.",positive
+"Best purchase I’ve made all year!",positive
+"Fantastic job from the development team.",positive
+"It exceeded all my expectations.",positive
+"This is the worst experience I’ve had in a while.",negative
+"I’m really disappointed with the quality.",negative
+"Totally useless — don’t waste your time.",negative
+"The customer service was rude and unhelpful.",negative
+"It keeps crashing, and nothing works properly.",negative
+"What a terrible design choice.",negative
+"I regret buying this.",negative
+"Not even close to what was promised.",negative
+"The app was updated yesterday.",neutral
+"It’s okay, not bad but nothing special either.",neutral
