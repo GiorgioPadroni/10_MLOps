@@ -1,6 +1,6 @@
 # std libraries
 import glob
-import time
+import os
 
 # third party libraries
 from datasets import Dataset
@@ -46,4 +46,5 @@ if __name__ == "__main__":
 
     # Flatten to CSV
     metrics_df = pd.DataFrame(report).transpose()
+    os.makedirs("CI_CD/results", exist_ok=True)
     metrics_df.to_csv("CI_CD/results/metrics.csv")
