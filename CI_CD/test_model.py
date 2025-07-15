@@ -1,43 +1,25 @@
+# std libraries
 import glob
-import re
 import time
 
 # third party libraries
 from datasets import Dataset
 import pandas as pd
-import requests
 from sklearn.metrics import classification_report
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer
 import torch
 
-
-def get_latest_model_id(user: str, prefix: str = "sentiment_") -> str:
-    url = f"https://huggingface.co/api/models?author={user}"
-    response = requests.get(url)
-    response.raise_for_status()
-    models = response.json()
-
-    # Filtra modelli che iniziano con il prefix
-    filtered = [
-        m["modelId"]
-        for m in models
-        if m["modelId"].startswith(f"{user}/{prefix}")
-    ]
-
-    if not filtered:
-        raise ValueError("No models found with the given prefix.")
-
-    # Ordina per timestamp (assunto nel nome)
-    latest = max(filtered, key=lambda x: int(re.findall(rf"{prefix}(\d+)$", x)[0]))
-    return latest
+# local libraries
+from utils import get_latest_model_id, user, PRETRAINED_MODEL
 
 
-user = "PonzioPilates97"
+
 latest_model_id = get_latest_model_id(user)
+tokenizer = AutoTokenizer.from_pretrained(PRETRAINED_MODEL)
 
 
 if __name__ == "__main__":
-    pipe = pipeline("text-classification", model=latest_model_id, tokenizer=latest_model_id)
+    pipe = pipeline("text-classification", model=latest_model_id, tokenizer=tokenizer)
 
     # Cerca tutti i CSV nella cartella data
     csv_files = glob.glob("data/test/*.csv")

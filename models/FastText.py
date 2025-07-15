@@ -1,21 +1,28 @@
+# third party libraries
 import numpy as np
 from scipy.special import softmax
 from transformers import AutoModelForSequenceClassification
 from transformers import TFAutoModelForSequenceClassification
 from transformers import AutoTokenizer, AutoConfig
 
+# local libraries
+from utils import get_latest_model_id, user, PRETRAINED_MODEL
+
 
 # Consts
-MODEL_PATH = f"cardiffnlp/twitter-roberta-base-sentiment-latest"
-TOKENIZER = AutoTokenizer.from_pretrained(MODEL_PATH)
-CONFIG = AutoConfig.from_pretrained(MODEL_PATH)
+TOKENIZER = AutoTokenizer.from_pretrained(PRETRAINED_MODEL)
+CONFIG = AutoConfig.from_pretrained(PRETRAINED_MODEL)
 
 class FastText:
-    def __init__(self, model_path=MODEL_PATH, tokenizer=TOKENIZER, config=CONFIG):
+    def __init__(self, model_path=PRETRAINED_MODEL, tokenizer=TOKENIZER, config=CONFIG, load_from_hf=False):
         self.model_path = model_path
         self.tokenizer = tokenizer
         self.config = config
-        self.model = AutoModelForSequenceClassification.from_pretrained(self.model_path)
+        if load_from_hf is None:
+            self.model = AutoModelForSequenceClassification.from_pretrained(self.model_path)
+        else:
+            latest_model_id = get_latest_model_id(user)
+            self.model = AutoModelForSequenceClassification.from_pretrained(latest_model_id)
 
 
     def _preprocess(self, text):
