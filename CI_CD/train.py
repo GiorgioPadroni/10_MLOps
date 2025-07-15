@@ -1,10 +1,12 @@
 # std libraries
 import glob
+import re
 import time
 
 # third party libraries
 from datasets import Dataset
 import pandas as pd
+import requests
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer
 import torch
 
@@ -12,6 +14,7 @@ import torch
 
 def tokenize(batch):
     return tokenizer(batch["text"], padding=True, truncation=True)
+    
 
 if __name__ == "__main__":
     # Caricamento modello e tokenizer
@@ -20,7 +23,7 @@ if __name__ == "__main__":
     model = AutoModelForSequenceClassification.from_pretrained(model_name)
     
     # Cerca tutti i CSV nella cartella data
-    csv_files = glob.glob("data/*.csv")
+    csv_files = glob.glob("data/train/*.csv")
 
     if not csv_files:
         raise ValueError("No CSV files found in /data")
