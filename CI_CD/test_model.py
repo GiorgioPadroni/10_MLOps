@@ -43,21 +43,5 @@ if __name__ == "__main__":
     metrics_df = pd.DataFrame(report).transpose()
 
     os.makedirs("CI_CD/results", exist_ok=True)
-    metrics_path = "CI_CD/results/metrics.csv"
-    metrics_df.to_csv(metrics_path)
-
-    mlflow.set_tracking_uri("http://localhost:5000")  # oppure Docker se lo usi così
-    mlflow.set_experiment("Model Evaluation")
-
-    with mlflow.start_run():
-        # Parametri
-        mlflow.log_param("model_id", latest_model_id)
-        mlflow.log_param("num_test_samples", len(df))
-
-        # Logga alcune metriche globali
-        mlflow.log_metric("accuracy", report["accuracy"])
-        mlflow.log_metric("macro_f1", report["macro avg"]["f1-score"])
-        mlflow.log_metric("weighted_f1", report["weighted avg"]["f1-score"])
-
-        # Artefatto CSV
-        mlflow.log_artifact(metrics_path)
+    metrics_df.to_csv("CI_CD/results/metrics.csv")
+    

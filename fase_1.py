@@ -1,6 +1,9 @@
+# std libraries
 from datasets import load_dataset
-from models.FastText import FastText
 from tqdm import tqdm
+
+# local libraries
+from models.FastText import FastText
 
 
 def evaluate_dataset(ds, model):
