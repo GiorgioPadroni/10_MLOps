@@ -1,4 +1,4 @@
-# std libraries
+# third party libraries
 from datasets import load_dataset
 from tqdm import tqdm
 
