@@ -31,10 +31,12 @@ if __name__ == "__main__":
 
     ds = Dataset.from_pandas(df)
     
-    dataset = ds.map(tokenize, batched=True)
-
+    # Mapping etichette PRIMA della tokenizzazione
     label_map = {"negative": 0, "neutral": 1, "positive": 2}
     ds = ds.map(lambda row: {"label": label_map[row["sentiment"]]})
+
+    # Tokenizzazione DOPO (così 'text' è ancora presente)
+    ds = ds.map(tokenize, batched=True)
 
     # Setup Trainer
     training_args = TrainingArguments(
