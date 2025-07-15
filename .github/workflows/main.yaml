@@ -50,6 +50,12 @@ jobs:
       - name: Run tests
         run: |
           python -m CI_CD.test_model
+      
+      - name: Upload metrics
+        uses: actions/upload-artifact@v3
+        with:
+          name: metrics
+          path: CI_CD/results/metrics.csv
 
   integration_test:
     runs-on: ubuntu-latest
