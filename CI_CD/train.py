@@ -52,7 +52,7 @@ if __name__ == "__main__":
         per_device_eval_batch_size=8,
         num_train_epochs=1,
         save_strategy="no",  # Nessun salvataggio per velocità
-        # push_to_hub=True,
+        push_to_hub=True,
         hub_model_id=model_id
     )
 
@@ -65,5 +65,5 @@ if __name__ == "__main__":
     )
 
     trainer.train()
-    model.push_to_hub(model_id)
+    trainer.push_to_hub(model_id)
     tokenizer.push_to_hub(model_id)
