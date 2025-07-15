@@ -41,6 +41,8 @@ if __name__ == "__main__":
     # Tokenizzazione DOPO (così 'text' è ancora presente)
     ds = ds.map(tokenize, batched=True)
 
+    model_id = f"PonzioPilates97/sentiment_{int(time.time())}"
+
     # Setup Trainer
     training_args = TrainingArguments(
         output_dir="./results",
@@ -50,8 +52,8 @@ if __name__ == "__main__":
         per_device_eval_batch_size=8,
         num_train_epochs=1,
         save_strategy="no",  # Nessun salvataggio per velocità
-        push_to_hub=True,
-        hub_model_id=f"PonzioPilates97/sentiment_{int(time.time())}"
+        # push_to_hub=True,
+        hub_model_id=model_id
     )
 
     trainer = Trainer(
@@ -63,3 +65,5 @@ if __name__ == "__main__":
     )
 
     trainer.train()
+    model.push_to_hub(model_id)
+    tokenizer.push_to_hub(model_id)
