@@ -6,7 +6,7 @@ on:
       - 'data/**'         # trigger solo su cambiamenti in data/
 
 jobs:
-  train:
+  CI_CD_pipeline:
     runs-on: ubuntu-latest
 
     steps:
